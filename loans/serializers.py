@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Inquiry
 
-class CountrySerializer(serializers.ModelSerializer):
+class InquirySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Inquiry

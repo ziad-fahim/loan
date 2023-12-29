@@ -5,7 +5,9 @@ from django.db import models
 class Programs(models.Model):
     name = models.CharField(max_length=100)
     min_amount = models.PositiveIntegerField()
-    max_length = models.PositiveIntegerField()
+    max_amount = models.PositiveIntegerField()
+    min_age = models.IntegerField()
+    max_age = models.IntegerField()
 
 
 class Borrower(models.Model):
@@ -14,22 +16,18 @@ class Borrower(models.Model):
 
 
 class Inquiry(models.Model):
-    
-    STATUS = (
-        ('APPROVED', 'APPROVED'),
-        ('REJECTED', 'REJECTED')
-    )
+    class Status(models.IntegerChoices):
+        APPROVED = 1, "Approved"
+        REJECTED = 2, "Rejected"
 
     program = models.ForeignKey(Programs, related_name="inquiry_program", on_delete=models.CASCADE)
     borrower= models.ForeignKey(Borrower, related_name="inquiry_borrower", on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
-    status = models.CharField(max_length=10, choices=STATUS)
+    status = models.CharField(max_length=10, choices=Status.choices, null=True, blank=True)
     rejection_reason = models.TextField(null=True, blank=True)
 
 class Untrusted(models.Model):
     identification_number = models.CharField(max_length=20)
-
-
 
 
 

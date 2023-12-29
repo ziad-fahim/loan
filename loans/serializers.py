@@ -1,14 +1,21 @@
 from rest_framework import serializers
-from .models import Inquiry
+from .models import Inquiry, Programs, Borrower
+
+class ProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Programs
+        fields = '__all__'
+
+class BorrowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borrower
+        fields = '__all__'
 
 class InquirySerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Inquiry
-        fields = "__all__"
-
-
-
+        fields = '__all__'
+        read_only_fields = ('status', 'rejected_reasons')
 
 
 

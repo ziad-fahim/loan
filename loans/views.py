@@ -60,7 +60,7 @@ class InquiryViewSet(viewsets.ModelViewSet):
         inquiry_serializer.is_valid(raise_exception=True)
         inquiry = inquiry_serializer.save()
 
-
+        # Check status of the inquiry
         if is_approved:
             inquiry.status = Inquiry.Status.APPROVED
         else:

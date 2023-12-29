@@ -22,24 +22,33 @@ class InquiryViewSet(viewsets.ModelViewSet):
         data = request.data
 
 
-        program = data.get('program')
-        borrower = data.get('borrower')
-        loan_amount = data.get('loan_amount')
+        program_id = data.get('program')
+        borrower_id = data.get('borrower')
+        loan_amount = data.get('amount')
         rejection_reasons = []
         is_approved = True
 
+        try:
+            program = Programs.objects.get(id=program_id)
+        except Programs.DoesNotExist:
+            return Response({'detail': 'Invalid program ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            borrower = Borrower.objects.get(id=borrower_id)
+        except Borrower.DoesNotExist:
+            return Response({'detail': 'Invalid ID'}, status=status.HTTP_400_BAD_REQUEST)
+
         # Verify loan amount falls within specified range
         try:
-            if not (program.min_amount <= loan_amount <= program.max_amount):
+            if not (program.min_amount <= int(loan_amount) <= program.max_amount):
                 is_approved = False
                 rejection_reasons.append('Loan amount not within specified range')
         except Programs.DoesNotExist:
             return Response({'detail': 'Invalid program ID'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Determine age of Borrower
-        dob_date = datetime.strptime(borrower.date_of_birth, '%Y-%m-%d')
         today = datetime.today()
-        borrower_age = today.year - dob_date.year
+        borrower_age = today.year - borrower.date_of_birth.year
         if not (program.min_age <= borrower_age <= program.max_age):
             is_approved = False
             rejection_reasons.append('Borrower age not within applicable range')

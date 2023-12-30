@@ -74,7 +74,7 @@ class InquiryViewSet(viewsets.ModelViewSet):
             inquiry.status = Inquiry.Status.APPROVED
         else:
             inquiry.status = Inquiry.Status.REJECTED
-            inquiry.reason_for_rejection = ', '.join(rejection_reasons)
+            inquiry.rejection_reason = ', '.join(rejection_reasons)
 
         inquiry.save()
 
